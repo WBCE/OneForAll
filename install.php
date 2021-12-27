@@ -98,7 +98,7 @@ if ($mod_name != 'oneforall') {
 	$file_contents = file_get_contents($file_path);
 	$file_contents = str_replace($needle, $mod_name, $file_contents, $count);
 	// Write replaced string back to file
-	if ($count == 2) {
+	if ($count == 3) {
 		if (file_put_contents($file_path, $file_contents) === false) {
 			$admin->print_error('<p style="font-weight: bold;">Failed to modify the search file <code>'.$search_file.'</code>.</p><p>Please modify it manually by replacing the 2 placeholders <code>'.$needle.'</code> by the new module name &quot;'.$mod_name.'&quot;.</p>', ADMIN_URL.'/modules/index.php?advanced');
 	}

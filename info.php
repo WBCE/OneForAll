@@ -36,8 +36,11 @@ $module_name = 'OneForAll'; // default: OneForAll
 
 	DEVELOPMENT HISTORY:
 	
+   v1.1.7  (Bernd; 27/12/2021)
+     ! Fix for search issue, see https://forum.wbce.org/viewtopic.php?pid=38845#p38845   
+	
    v1.1.6  (Florian Meerwinck; 04/10/2021) 
-     ! Fix PHP 8 Deprecations (by some adaptions from OfA for WebsiteBaker    
+     ! Fix PHP 8 Deprecations (by some adaptions from OfA for WebsiteBaker)    
 
    v1.1.5  (Christoph Marti; 06/20/2020)
 	 + Only export page settings of the current section_id (page that has initiated the export)
@@ -305,7 +308,7 @@ $mod_name           = $module_directory;
 $renamed_to         = $mod_name == 'oneforall' ? '' : '(renamed to <strong>'.$module_name.'</strong>) ';
 
 $module_function    = 'page';
-$module_version     = '1.1.6';
+$module_version     = '1.1.7';
 $module_platform    = '2.8.x';
 $module_author      = 'Christoph Marti';
 $module_license     = 'GNU General Public License';
