@@ -36,6 +36,10 @@ $module_name = 'OneForAll'; // default: OneForAll
 
 	DEVELOPMENT HISTORY:
 	
+   v1.1.8 (Florian; 06/07/2022)
+     ! PHP 8.1 compatibility fixes
+     ! fix for backend display error when no items exist (thx to atlasfreak, see https://forum.wbce.org/viewtopic.php?id=4771)	 
+	
    v1.1.7  (Bernd; 27/12/2021)
      ! Fix for search issue, see https://forum.wbce.org/viewtopic.php?pid=38845#p38845   
 	
@@ -308,7 +312,7 @@ $mod_name           = $module_directory;
 $renamed_to         = $mod_name == 'oneforall' ? '' : '(renamed to <strong>'.$module_name.'</strong>) ';
 
 $module_function    = 'page';
-$module_version     = '1.1.7';
+$module_version     = '1.1.8';
 $module_platform    = '2.8.x';
 $module_author      = 'Christoph Marti';
 $module_license     = 'GNU General Public License';

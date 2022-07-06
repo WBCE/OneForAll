@@ -30,6 +30,7 @@ $inc_path = dirname(__FILE__);
 require('../../config.php');
 require($inc_path.'/resize_img.php');
 require($inc_path.'/pngthumb.php');
+require($inc_path.'/functions.php');
 require_once(WB_PATH.'/framework/functions.php');
 
 // Get module name
@@ -72,21 +73,21 @@ require(WB_PATH.'/modules/admin.php');
 $item_dir = $page['link'];
 
 // Remove any tags and add slashes
-$old_link         = strip_tags($admin->get_post('link'));
-$old_section_id   = strip_tags($admin->get_post('section_id'));
-$new_section_id   = strip_tags($admin->get_post('new_section_id'));
-$action           = strip_tags($admin->get_post('action'));
-$title            = $admin->add_slashes(strip_tags($admin->get_post('title')));
-$scheduling_start = strip_tags($admin->get_post('scheduling_start'));
-$scheduling_end   = strip_tags($admin->get_post('scheduling_end'));
-$description      = $admin->add_slashes(strip_tags($admin->get_post('description')));
+$old_link         = lazystriptags($admin->get_post('link'));
+$old_section_id   = lazystriptags($admin->get_post('section_id'));
+$new_section_id   = lazystriptags($admin->get_post('new_section_id'));
+$action           = lazystriptags($admin->get_post('action'));
+$title            = $admin->add_slashes(lazystriptags($admin->get_post('title')));
+$scheduling_start = lazystriptags($admin->get_post('scheduling_start'));
+$scheduling_end   = lazystriptags($admin->get_post('scheduling_end'));
+$description      = $admin->add_slashes(lazystriptags($admin->get_post('description')));
 
 // Images
 $images = array();
 if (!empty($_POST['images'])) {
 	foreach ($_POST['images'] as $img_id => $image) {
 		// Strip tags and add slashes
-		$image = array_map('strip_tags', $image);
+		$image = array_map('lazystriptags', $image);
 		$image = array_map('addslashes', $image);
 		// Sanitize vars
 		$image['active']       = empty($image['active'])       ? 0 : 1;
@@ -96,11 +97,11 @@ if (!empty($_POST['images'])) {
 	}
 }
 
-$imgresize = strip_tags($admin->get_post('imgresize'));
-$quality   = strip_tags($admin->get_post('quality'));
-$maxheight = strip_tags($admin->get_post('maxheight'));
-$maxwidth  = strip_tags($admin->get_post('maxwidth'));
-$active    = strip_tags($admin->get_post('active'));
+$imgresize = lazystriptags($admin->get_post('imgresize'));
+$quality   = lazystriptags($admin->get_post('quality'));
+$maxheight = lazystriptags($admin->get_post('maxheight'));
+$maxwidth  = lazystriptags($admin->get_post('maxwidth'));
+$active    = lazystriptags($admin->get_post('active'));
 
 
 
@@ -176,7 +177,7 @@ $query_active = isset($_POST['active']) ? " active = '$active'," : '';
 if ($scheduling['ts_start'] && $scheduling['ts_end'] && $scheduling['ts_start'] >= $scheduling['ts_end']) {
 	$scheduling['end']    = $scheduling['start'];
 	$scheduling['ts_end'] = $scheduling['ts_start'];
-	$errors[] = sprintf($MOD_ONEFORALL[$mod_name]['ERR_INVALID_SCHEDULING'], htmlspecialchars($scheduling_start), htmlspecialchars($scheduling_end));
+	$errors[] = sprintf($MOD_ONEFORALL[$mod_name]['ERR_INVALID_SCHEDULING'], lazyspecial($scheduling_start), lazyspecial($scheduling_end));
 }
 // Serialize start and end time
 $scheduling = serialize($scheduling);
@@ -188,7 +189,7 @@ if ($query_fields->numRows() > 0) {
 		$field_id = $field['field_id'];
 		$email    = $_POST['fields'][$field_id];
 		if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-			$errors[] = sprintf($MOD_ONEFORALL[$mod_name]['ERR_INVALID_EMAIL'], htmlspecialchars($email));
+			$errors[] = sprintf($MOD_ONEFORALL[$mod_name]['ERR_INVALID_EMAIL'], lazyspecial($email));
 		}
 	}
 }
@@ -200,7 +201,7 @@ if ($query_fields->numRows() > 0) {
 		$field_id = $field['field_id'];
 		$url      = $_POST['fields'][$field_id];
 		if (!empty($url) && !filter_var($url, FILTER_VALIDATE_URL)) {
-			$errors[] = sprintf($MOD_ONEFORALL[$mod_name]['ERR_INVALID_URL'], htmlspecialchars($url));
+			$errors[] = sprintf($MOD_ONEFORALL[$mod_name]['ERR_INVALID_URL'], lazyspecial($url));
 		}
 	}
 }
@@ -280,12 +281,12 @@ header('Location: /index.php');
 			}
 			// Check for invalid chars in filename
 			if (!preg_match('#^[a-zA-Z0-9._-]*$#', $filename)) {
-				$errors[] = $MOD_ONEFORALL[$mod_name]['ERR_INVALID_FILE_NAME'].": ".htmlspecialchars($filename.'.'.$fileext);
+				$errors[] = $MOD_ONEFORALL[$mod_name]['ERR_INVALID_FILE_NAME'].": ".lazyspecial($filename.'.'.$fileext);
 				continue;
 			}
 			// Check if filename already exists
 			if (file_exists($file_path)) {
-				$errors[] = $MESSAGE['MEDIA']['FILE_EXISTS'].": ".htmlspecialchars($filename.'.'.$fileext);
+				$errors[] = $MESSAGE['MEDIA']['FILE_EXISTS'].": ".lazyspecial($filename.'.'.$fileext);
 				continue;
 			}
 

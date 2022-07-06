@@ -24,6 +24,7 @@ if (defined('WB_PATH') == false) {
 $inc_path = dirname(__FILE__);
 // Get module name
 require_once($inc_path.'/info.php');
+require_once($inc_path.'/functions.php');
 
 // Make use of the skinable backend themes of WB > 2.7
 // Check if THEME_URL is supported otherwise use ADMIN_URL
@@ -169,24 +170,7 @@ if ($query_fields->numRows() > 0) {
 } else {
 	$field_id = false;
 }
-?>
 
-<table id="mod_<?php echo $mod_name; ?>_items_b" class="sortierbar">
-<thead>
-	<tr>
-		<th class="sortierbar">ID</th>
-		<th></th>
-		<th class="sortierbar"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_TITLE']; ?></th>
-		<th><?php if ($field_id) echo $MOD_ONEFORALL[$mod_name]['TXT_GROUP']; ?></th>
-		<th class="sortierbar"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_ENABLED']; ?></th>
-		<th></th>
-		<th></th>
-		<th></th>
-	</tr>
-</thead>
-<tbody>
-
-<?php
 // Define the up and down arrows depending on ordering
 $position_order = $order_by_position_asc ? 'ASC' : 'DESC';
 $arrow1       = 'up';
@@ -205,6 +189,26 @@ $position_order = $order_by_position_asc ? 'ASC' : 'DESC';
 $query_items    = $database->query("SELECT * FROM `".TABLE_PREFIX."mod_".$mod_name."_items` WHERE section_id = '$section_id' AND title != '' ORDER BY position ".$position_order);
 
 if ($query_items->numRows() > 0) {
+	
+	?>
+
+	<table id="mod_<?php echo $mod_name; ?>_items_b" class="sortierbar">
+	<thead>
+		<tr>
+			<th class="sortierbar">ID</th>
+			<th></th>
+			<th class="sortierbar"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_TITLE']; ?></th>
+			<th><?php if ($field_id) echo $MOD_ONEFORALL[$mod_name]['TXT_GROUP']; ?></th>
+			<th class="sortierbar"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_ENABLED']; ?></th>
+			<th></th>
+			<th></th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+
+	<?php
+	
 	$num_items = $query_items->numRows();
 
 	// Loop through existing items
@@ -217,7 +221,7 @@ if ($query_items->numRows() > 0) {
 
 		// Sanitize
 		$item = array_map('stripslashes', $item);
-		$item = array_map('htmlspecialchars', $item);
+		$item = array_map('lazyspecial', $item);
 
 		// Get item group id
 		if ($field_id) {

@@ -20,6 +20,41 @@ if (defined('WB_PATH') == false) {
 	exit('Cannot access this file directly'); 
 }
 
+/* stupid PHP 8.1 fixes by florian -- BEGIN -- */
+
+function lazystrip($val) {
+	if ($val!==null) {
+		$val = stripslashes($val);
+	}
+	return $val;
+}
+
+function lazystriptags($val) {
+	if ($val!==null) {
+		$val = strip_tags($val);
+	}
+	return $val;
+}
+
+function lazyspecial($val) {
+	if ($val!==null) {
+		$val = htmlspecialchars($val);
+	}
+	return $val;
+}
+
+function lazyexplode($x,$y) {
+	if ($y!==null) {
+		$val = explode($x,$y);
+	} else {
+		$val = array();
+	}
+	return $val;
+}
+
+/* stupid PHP 8.1 fixes by florian -- END -- */
+
+
 /* ---------- adapted from OfA for WebsiteBaker --------------- */
 
 function is_serialized($data){

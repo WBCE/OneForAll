@@ -24,6 +24,7 @@ require(WB_PATH.'/modules/admin.php');
 $inc_path = dirname(__FILE__);
 // Get module name
 require_once($inc_path.'/info.php');
+require_once($inc_path.'/functions.php');
 
 // Check page and section id
 if (empty($_REQUEST['page_id']) OR !is_numeric($_REQUEST['page_id']) OR empty($_POST['section_id']) OR !is_numeric($_POST['section_id'])) {
@@ -43,7 +44,7 @@ foreach ($_POST as $key => $value) {
 	}
 
 	// Escape and strip tags
-	$settings[$key] = strip_tags($admin->get_post_escaped($value));
+	$settings[$key] = lazystriptags($admin->get_post_escaped($value));
 
 	// Validate (pseudo) boolean
 	if (in_array($key, array('settings_admin_only', 'order_by_position_asc', 'show_item_mover', 'show_item_duplicator', 'wysiwyg_full_width', 'show_group_headers', 'order_by_group_asc', 'field_meta_desc', 'view_detail_pages', 'field_type_code', 'imgresize', 'set_scheduling', 'scheduling_debug'))) {

@@ -25,6 +25,7 @@ require(WB_PATH.'/modules/admin.php');
 $inc_path = dirname(__FILE__);
 // Get module name
 require_once($inc_path.'/info.php');
+require_once($inc_path.'/functions.php');
 
 // This code removes any php tags and adds slashes
 $friendly = array('&lt;', '&gt;', '?php');

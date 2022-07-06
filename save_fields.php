@@ -25,6 +25,7 @@ require(WB_PATH.'/modules/admin.php');
 $inc_path = dirname(__FILE__);
 // Get module name
 require_once($inc_path.'/info.php');
+require_once($inc_path.'/functions.php');
 
 // Look for language file
 if (LANGUAGE_LOADED) {
@@ -50,11 +51,11 @@ if (!empty($_POST['fields'])) {
 	foreach ($_POST['fields'] as $field_id => $fields) {
 
 		// Add slashes and remove any tags
-		$field_id = $admin->add_slashes(strip_tags($field_id));
-		$type     = $admin->add_slashes(strip_tags($fields['type']));
-		$extra    = $admin->add_slashes(strip_tags($fields['extra']));
-		$name     = $admin->add_slashes(strip_tags($fields['name']));
-		$label    = $admin->add_slashes(strip_tags($fields['label']));
+		$field_id = $admin->add_slashes(lazystriptags($field_id));
+		$type     = $admin->add_slashes(lazystriptags($fields['type']));
+		$extra    = $admin->add_slashes(lazystriptags($fields['extra']));
+		$name     = $admin->add_slashes(lazystriptags($fields['name']));
+		$label    = $admin->add_slashes(lazystriptags($fields['label']));
 		$template = $admin->add_slashes($fields['template']);
 
 		// First delete field if requested
@@ -70,7 +71,7 @@ if (!empty($_POST['fields'])) {
 		$first_group_field_id = $database->get_one("SELECT field_id FROM `".TABLE_PREFIX."mod_".$mod_name."_fields` WHERE type = 'group'");
 		// Error message and continue
 		if ($type == 'group' && $first_group_field_id != null && $field_id != $first_group_field_id) {
-			$errors[] = sprintf($MOD_ONEFORALL[$mod_name]['ERR_ONLY_ONE_GROUP_FIELD'], htmlspecialchars($name));
+			$errors[] = sprintf($MOD_ONEFORALL[$mod_name]['ERR_ONLY_ONE_GROUP_FIELD'], lazyspecial($name));
 			continue;
 		}
 
@@ -85,13 +86,13 @@ if (!empty($_POST['fields'])) {
 		// Prevent conflicts between customized field names and general placeholders
 		$reserved_names = array('BACK', 'DATE', 'DISPLAY_NAME', 'DISPLAY_PREVIOUS_NEXT_LINKS', 'USER_EMAIL', 'FIELD_NAME', 'IMAGE', 'IMAGES', 'ITEM_ID', 'LINK', 'NEXT', 'NEXT_LINK', 'NEXT_PAGE_LINK', 'OF', 'OUT_OF', 'PAGE_TITLE', 'PREVIOUS', 'PREVIOUS_LINK', 'PREVIOUS_PAGE_LINK', 'TEXT_OF', 'TEXT_OUT_OF', 'TEXT_READ_MORE', 'TXT_BACK', 'TXT_DESCRIPTION', 'TXT_ITEM', 'THUMB', 'THUMBS', 'TIME', 'TITLE', 'USERNAME', 'USER_ID');
 		if (in_array(strtoupper($name), $reserved_names)) {
-			$errors[] = sprintf($MOD_ONEFORALL[$mod_name]['ERR_CONFLICT_WITH_RESERVED_NAME'], htmlspecialchars($name));
+			$errors[] = sprintf($MOD_ONEFORALL[$mod_name]['ERR_CONFLICT_WITH_RESERVED_NAME'], lazyspecial($name));
 			continue;
 		}
 
 		// Check field name for invalid chars
 		if (!preg_match('#^[a-zA-Z0-9._-]*$#', $name)) {
-			$errors[] = sprintf($MOD_ONEFORALL[$mod_name]['ERR_INVALID_FIELD_NAME'], htmlspecialchars($name));
+			$errors[] = sprintf($MOD_ONEFORALL[$mod_name]['ERR_INVALID_FIELD_NAME'], lazyspecial($name));
 			continue;
 		}
 
@@ -125,7 +126,7 @@ if (!empty($_POST['fields'])) {
 		if ($database->is_error()) {
 			if (false !== strpos($database->get_error(), 'Duplicate entry')) {
 				if (!empty($name)) {
-					$errors[] = sprintf($MOD_ONEFORALL[$mod_name]['ERR_FIELD_NAME_EXISTS'], htmlspecialchars($name));
+					$errors[] = sprintf($MOD_ONEFORALL[$mod_name]['ERR_FIELD_NAME_EXISTS'], lazyspecial($name));
 				}
 			}
 			// ...or get any other db error
